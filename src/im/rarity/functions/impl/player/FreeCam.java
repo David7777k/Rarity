@@ -31,9 +31,9 @@ public class FreeCam extends Function {
 
     private boolean returningToPosition = false;
     private long returnStartTime = 0;
-    private static final long RETURN_DURATION = 3000; // Время возврата 3 секунды
+    private static final long RETURN_DURATION = 3000;
 
-    // Переменные для хранения последних отправленных данных о движении
+
     private double lastPosX, lastPosY, lastPosZ;
     private boolean lastOnGround;
 
@@ -58,7 +58,7 @@ public class FreeCam extends Function {
                 }
                 mc.player.abilities.isFlying = true;
 
-                // Постоянно отправляем пакеты о движении с текущей позицией
+
                 sendPlayerMovementPacket(mc.player.getPosX(), mc.player.getPosY(), mc.player.getPosZ(), mc.player.isOnGround());
             } else {
                 handleSmoothReturn();
@@ -72,7 +72,7 @@ public class FreeCam extends Function {
             sendPlayerMovementPacket(mc.player.getPosX(), mc.player.getPosY(), mc.player.getPosZ(), mc.player.isOnGround());
         }
         if (mc.player != null) {
-            e.cancel();  // Останавливаем исходное движение игрока
+            e.cancel();
         }
     }
 
@@ -119,7 +119,7 @@ public class FreeCam extends Function {
         if (mc.player == null) {
             return;
         }
-        startReturnToPosition();  // Начинаем плавный возврат
+        startReturnToPosition();
         mc.player.abilities.isFlying = false;
         super.onDisable();
     }
@@ -132,22 +132,22 @@ public class FreeCam extends Function {
     private void handleSmoothReturn() {
         long elapsedTime = System.currentTimeMillis() - returnStartTime;
         if (elapsedTime > RETURN_DURATION) {
-            // Возвращаем на исходную позицию по завершению возврата
+
             mc.player.setPositionAndRotation(clientPosition.x, clientPosition.y, clientPosition.z, mc.player.rotationYaw, mc.player.rotationPitch);
             removeFakePlayer();
             returningToPosition = false;
             mc.player.setMotion(Vector3d.ZERO);
 
-            // Отправляем финальный пакет с положением игрока
+
             sendPlayerMovementPacket(clientPosition.x, clientPosition.y, clientPosition.z, mc.player.isOnGround());
         } else {
-            // Плавное движение к исходной позиции
+
             double progress = (double) elapsedTime / RETURN_DURATION;
             Vector3d currentPosition = mc.player.getPositionVec();
             Vector3d newPosition = currentPosition.add(clientPosition.subtract(currentPosition).scale(progress));
             mc.player.setPosition(newPosition.x, newPosition.y, newPosition.z);
 
-            // Отправляем пакеты с текущим положением игрока во время возврата
+
             sendPlayerMovementPacket(newPosition.x, newPosition.y, newPosition.z, mc.player.isOnGround());
         }
     }

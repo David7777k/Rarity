@@ -71,7 +71,7 @@ public class SliderComponent extends Component {
 
     @Override
     public void mouseClick(float mouseX, float mouseY, int mouse) {
-        // TODO Auto-generated method stub
+
         if (MathUtil.isHovered(mouseX, mouseY, getX() + 5, getY() + 10, getWidth(), 3)) {
             drag = true;
         }
@@ -80,7 +80,7 @@ public class SliderComponent extends Component {
 
     @Override
     public void mouseRelease(float mouseX, float mouseY, int mouse) {
-        // TODO Auto-generated method stub
+
         drag = false;
         super.mouseRelease(mouseX, mouseY, mouse);
     }

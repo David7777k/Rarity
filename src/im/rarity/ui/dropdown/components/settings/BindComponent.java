@@ -57,7 +57,7 @@ public class BindComponent extends Component {
 
     @Override
     public void keyPressed(int key, int scanCode, int modifiers) {
-        // TODO Auto-generated method stub
+
         if (activated) {
             if (key == GLFW.GLFW_KEY_DELETE) {
                 setting.set(-1);

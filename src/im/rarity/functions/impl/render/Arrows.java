@@ -19,8 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
-
-// Перемещаем аннотацию на класс и заполняем корректные значения
 @FunctionRegister(name = "Arrows", type = Category.Render, description = "Displays directional arrows towards players")
 public class Arrows extends Function {
 
@@ -30,9 +28,9 @@ public class Arrows extends Function {
     private float animatedYaw;
     private float animatedPitch;
 
-    // Конструктор класса
+
     public Arrows() {
-        super("Arrows", Category.Render); // Установка имени и категории для функции
+        super("Arrows", Category.Render);
     }
 
     @Subscribe
@@ -61,13 +59,13 @@ public class Arrows extends Function {
                     continue;
                 }
 
-                // Вычисление позиций игрока
+
                 double x = player.lastTickPosX + (player.getPosX() - player.lastTickPosX) * mc.getRenderPartialTicks()
                         - mc.getRenderManager().info.getProjectedView().getX();
                 double z = player.lastTickPosZ + (player.getPosZ() - player.lastTickPosZ) * mc.getRenderPartialTicks()
                         - mc.getRenderManager().info.getProjectedView().getZ();
 
-                // Вычисление поворота камеры
+
                 double cos = MathHelper.cos((float) (mc.getRenderManager().info.getYaw() * (Math.PI * 2 / 360)));
                 double sin = MathHelper.sin((float) (mc.getRenderManager().info.getYaw() * (Math.PI * 2 / 360)));
                 double rotY = -(z * cos - x * sin);
@@ -75,25 +73,25 @@ public class Arrows extends Function {
 
                 float angle = (float) (Math.atan2(rotY, rotX) * 180 / Math.PI);
 
-                // Вычисление позиций для отображения стрелки
+
                 double x2 = animationStep * MathHelper.cos((float) Math.toRadians(angle)) + window.getScaledWidth() / 2f;
                 double y2 = animationStep * MathHelper.sin((float) Math.toRadians(angle)) + window.getScaledHeight() / 2f;
 
                 x2 += animatedYaw;
                 y2 += animatedPitch;
 
-                // Начало рендеринга стрелки
+
                 RenderSystem.pushMatrix();
                 RenderSystem.disableBlend();
                 RenderSystem.translatef((float) x2, (float) y2, 0);
                 RenderSystem.rotatef(angle, 0, 0, 1);
 
-                // Определение цвета для друга или обычного игрока
+
                 int color = FriendStorage.isFriend(player.getGameProfile().getName())
                         ? FriendStorage.getColor()
                         : ColorUtils.rgba(255, 255, 255, 255);
 
-                // Рендеринг треугольника
+
                 drawTriangle(-3F, 0F, 3F, 5F, new Color(color));
 
                 RenderSystem.enableBlend();
@@ -103,15 +101,9 @@ public class Arrows extends Function {
         lastYaw = mc.player.rotationYaw;
         lastPitch = mc.player.rotationPitch;
     }
-
-    // Метод для рисования треугольника
     public static void drawTriangle(float x, float y, float width, float height, Color color) {
-        // Загрузка текстуры треугольника
         DisplayUtils.drawImage(new ResourceLocation("rarity/images/triangle.png"), -8.0F, -9.0F, 18.0F, 18.0F);
-
-        // Дополнительные операции рендеринга (если нужны)
         RenderSystem.pushMatrix();
-        // Рендеринг с нужными преобразованиями
         RenderSystem.popMatrix();
     }
 }

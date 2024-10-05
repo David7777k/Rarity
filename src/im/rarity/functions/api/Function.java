@@ -99,8 +99,8 @@ public abstract class Function implements IMinecraft {
         }
     }
 
-    // Добавленный метод
+
     public boolean isEnabled() {
-        return state; // Возвращает текущее состояние функции
+        return state;
     }
 }

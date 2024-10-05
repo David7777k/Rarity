@@ -58,7 +58,7 @@ public class DropDown extends Screen implements IMinecraft {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        // TODO Auto-generated method stub
+
         Vec2i fixMouse = adjustMouseCoordinates((int) mouseX, (int) mouseY);
 
         Vec2i fix = ClientUtil.getMouse(fixMouse.getX(), fixMouse.getY());
@@ -161,7 +161,7 @@ public class DropDown extends Screen implements IMinecraft {
         for (Panel panel : panels) {
             panel.keyPressed(keyCode, scanCode, modifiers);
         }
-        // TODO Auto-generated method stub
+
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             animation = animation.animate(0, 0.25f, Easings.EXPO_OUT);
             return false;
@@ -213,7 +213,7 @@ public class DropDown extends Screen implements IMinecraft {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        // TODO Auto-generated method stub
+
         Vec2i fixMouse = adjustMouseCoordinates((int) mouseX, (int) mouseY);
 
         Vec2i fix = ClientUtil.getMouse(fixMouse.getX(), fixMouse.getY());

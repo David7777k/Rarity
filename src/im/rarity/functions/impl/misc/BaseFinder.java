@@ -24,14 +24,13 @@ import java.util.Map;
 @FunctionRegister(name = "BaseFinder", type = Category.Misc, description = "5")
 public class BaseFinder extends Function {
 
-    private boolean notifEnabled = true;  // Статус для сообщения о сундуке
+    private boolean notifEnabled = true; 
 
     private final Map<TileEntityType<?>, Integer> tiles = new HashMap<>(Map.of(
-            new ChestTileEntity().getType(), new Color(0, 187, 8).getRGB() //установка зеленого цвета есп, кто хочет может поменять
+            new ChestTileEntity().getType(), new Color(0, 187, 8).getRGB()
     ));
 
     public BaseFinder() {
-        // Удаляем настройку биндов и оставляем только логику
         super("EnhancedStats", Category.Render);
     }
 
@@ -58,9 +57,9 @@ public class BaseFinder extends Function {
             print("" + TextFormatting.RED + "В этом регионе не нашлось баз");
         }
 
-        // Логика нажатия кнопок для переключения уведомлений
-        if (e.getKey() == mc.gameSettings.keyBindTogglePerspective.getKeyCode()) {  // Пример клавиши
-            notifEnabled = !notifEnabled;  // Переключаем состояние
+
+        if (e.getKey() == mc.gameSettings.keyBindTogglePerspective.getKeyCode()) {
+            notifEnabled = !notifEnabled;
             print(notifEnabled ? "Уведомления включены" : "Уведомления выключены");
         }
     }

@@ -71,7 +71,6 @@ public class ClientUtil implements IMinecraft {
                 });
             }
         } catch (Exception exception) {
-            // Обработка исключения
             exception.printStackTrace();
         }
     }

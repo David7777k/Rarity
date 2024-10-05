@@ -15,17 +15,17 @@ public class ColorUtils {
     public final int orange = new Color(255, 128, 32).getRGB();
     public final int red = new Color(255, 64, 64).getRGB();
 
-    // Создает цвет в формате RGB
+
     public static int rgb(int r, int g, int b) {
         return 255 << 24 | r << 16 | g << 8 | b;
     }
 
-    // Создает цвет в формате RGBA
+
     public static int rgba(int r, int g, int b, int a) {
         return a << 24 | r << 16 | g << 8 | b;
     }
 
-    // Устанавливает цвет с учетом альфа-канала
+
     public static void setAlphaColor(final int color, final float alpha) {
         final float red = (float) (color >> 16 & 255) / 255.0F;
         final float green = (float) (color >> 8 & 255) / 255.0F;
@@ -33,28 +33,27 @@ public class ColorUtils {
         RenderSystem.color4f(red, green, blue, alpha);
     }
 
-    // Метод, который обращается к классу HUD за цветом
     public static int getColor(int index) {
         return HUD.getColor(index);
     }
 
-    // Устанавливает цвет для рендера
+
     public static void setColor(int color) {
         setAlphaColor(color, (float) (color >> 24 & 255) / 255.0F);
     }
 
-    // Преобразование цвета в формате HEX в ARGB
+
     public static int toColor(String hexColor) {
         int argb = Integer.parseInt(hexColor.substring(1), 16);
         return setAlpha(argb, 255);
     }
 
-    // Установка альфа-канала для цвета
+
     public static int setAlpha(int color, int alpha) {
         return (color & 0x00ffffff) | (alpha << 24);
     }
 
-    // Разделение цвета на компоненты RGBA
+
     public static float[] rgba(final int color) {
         return new float[] {
                 (color >> 16 & 0xFF) / 255f,
@@ -64,7 +63,7 @@ public class ColorUtils {
         };
     }
 
-    // Градиент от одного цвета к другому
+
     public static int gradient(int start, int end, int index, int speed) {
         int angle = (int) ((System.currentTimeMillis() / speed + index) % 360);
         angle = (angle > 180 ? 360 - angle : angle) + 180;
@@ -78,7 +77,7 @@ public class ColorUtils {
         return Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
     }
 
-    // Интерполяция между двумя цветами
+
     public static int interpolate(int start, int end, float value) {
         float[] startColor = rgba(start);
         float[] endColor = rgba(end);
@@ -89,8 +88,8 @@ public class ColorUtils {
                 (int) MathUtil.interpolate(startColor[3] * 255, endColor[3] * 255, value));
     }
 
-    // Метод для линейной интерполяции цвета
+
     public static int lerpColor(int rgb, int rgb1, float hpPercent) {
-        return rgb; // Логика интерполяции может быть реализована в зависимости от требований
+        return rgb;
     }
 }

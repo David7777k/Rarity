@@ -35,9 +35,9 @@ public class VulcanESP extends Function {
     private final HashMap<Entity, Vector4f> positions = new HashMap<>();
     private final ModeSetting modeSetting = new ModeSetting("Mode", "All", new String[]{"Diamonds", "Player_Heads", "Totems", "NetheriteItems", "All"});
 
-    // Вызов конструктора базового класса Function
+
     public VulcanESP() {
-        super("VulcanESP", Category.Render);  // Передаем название и категорию в конструктор базового класса
+        super("VulcanESP", Category.Render);
         this.addSettings(new Setting[]{this.modeSetting});
     }
 
@@ -53,7 +53,7 @@ public class VulcanESP extends Function {
                     ItemEntity itemEntity = (ItemEntity) entity;
                     ItemStack itemStack = itemEntity.getItem();
 
-                    // Проверка типа предмета
+
                     boolean isDiamond = itemStack.getItem() == Items.DIAMOND;
                     boolean isPlayerHead = itemStack.getItem() == Items.PLAYER_HEAD;
                     boolean isTotem = itemStack.getItem() == Items.TOTEM_OF_UNDYING;
@@ -62,7 +62,7 @@ public class VulcanESP extends Function {
                     boolean isNetheritePickaxe = itemStack.getItem() == Items.NETHERITE_PICKAXE;
                     boolean isNetheriteSword = itemStack.getItem() == Items.NETHERITE_SWORD;
 
-                    // Если предмет видим в соответствии с настройками
+
                     if (this.isEntityVisible(isDiamond, isPlayerHead, isTotem, isTripwireHook, isNetheriteIngot, isNetheritePickaxe, isNetheriteSword)) {
                         double x = MathUtil.interpolate(entity.getPosX(), entity.lastTickPosX, e.getPartialTicks());
                         double y = MathUtil.interpolate(entity.getPosY(), entity.lastTickPosY, e.getPartialTicks());
@@ -72,7 +72,7 @@ public class VulcanESP extends Function {
                         AxisAlignedBB aabb = new AxisAlignedBB(x - size.x / 1.5, y, z - size.z / 1.5, x + size.x / 1.5, y + size.y + 0.1, z + size.z / 1.5);
                         Vector4f position = null;
 
-                        // Проекция 8 точек
+
                         for (int i = 0; i < 8; ++i) {
                             Vector2f vector = ProjectionUtil.project(i % 2 == 0 ? aabb.minX : aabb.maxX, i / 2 % 2 == 0 ? aabb.minY : aabb.maxY, i / 4 % 2 == 0 ? aabb.minZ : aabb.maxZ);
                             if (position == null) {
@@ -90,7 +90,7 @@ public class VulcanESP extends Function {
                 }
             }
 
-            // Настройки рендеринга
+
             RenderSystem.enableBlend();
             RenderSystem.disableTexture();
             RenderSystem.defaultBlendFunc();
@@ -98,13 +98,12 @@ public class VulcanESP extends Function {
             BufferBuilder builder = Tessellator.getInstance().getBuffer();
             builder.begin(7, DefaultVertexFormats.POSITION_COLOR);
 
-            // Рендеринг каждого элемента
+
             for (Map.Entry<Entity, Vector4f> entry : this.positions.entrySet()) {
                 Vector4f position = entry.getValue();
                 ItemEntity itemEntity = (ItemEntity) entry.getKey();
                 int color = 0;
 
-                // Установка цвета для каждого элемента
                 if (itemEntity.getItem().getItem() == Items.DIAMOND) {
                     color = ColorUtils.rgba(0, 0, 255, 255);
                 } else if (itemEntity.getItem().getItem() == Items.PLAYER_HEAD) {

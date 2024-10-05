@@ -58,11 +58,11 @@ public class  Rarity {
     public boolean playerOnServer = false;
     public static final String CLIENT_NAME = "rarity solutions";
 
-    // Экземпляр Rarity
+
     @Getter
     private static Rarity instance;
 
-    // Менеджеры
+
     private FunctionRegistry functionRegistry;
     private ConfigStorage configStorage;
     private CommandDispatcher commandDispatcher;
@@ -70,21 +70,21 @@ public class  Rarity {
     private MacroManager macroManager;
     private StyleManager styleManager;
 
-    // Менеджер событий и скриптов
+
     private final EventBus eventBus = new EventBus();
     private final ScriptManager scriptManager = new ScriptManager();
 
-    // Директории
+
     private final File clientDir = new File(Minecraft.getInstance().gameDir + "\\rarity");
     private final File filesDir = new File(Minecraft.getInstance().gameDir + "\\rarity\\files");
 
-    // Элементы интерфейса
+
     private AltWidget altWidget;
     private AltConfig altConfig;
     private DropDown dropDown;
     private Window autoBuyUI;
 
-    // Конфигурация и обработчики
+
     private AutoBuyConfig autoBuyConfig = new AutoBuyConfig();
     private AutoBuyHandler autoBuyHandler;
     private ViaMCP viaMCP;

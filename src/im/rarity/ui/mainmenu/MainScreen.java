@@ -94,7 +94,7 @@ public class MainScreen extends Screen implements IMinecraft {
         int logoWidth = 1920 / 2;
         int logoHeight = 1080 / 2;
 
-        // Расчет координат для рисования логотипа по центру
+
         int xLogo = (windowWidth - logoWidth) / 2;
         int yLogo = (windowHeight - logoHeight) / 2 + 50;
         boolean small = mainWindow.getWidth() < 900 && mainWindow.getHeight() < 900;

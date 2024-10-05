@@ -52,13 +52,13 @@ import static net.minecraft.client.renderer.WorldRenderer.frustum;
 public class ESP extends Function {
     public ModeListSetting remove = new ModeListSetting("Убрать", new BooleanSetting("Боксы", false), new BooleanSetting("Полоску хп", false), new BooleanSetting("Текст хп", false), new BooleanSetting("Зачарования", false), new BooleanSetting("Список эффектов", false));
 
-    // Слайдер для изменения масштаба ников
+
     public SliderSetting scaleSetting = new SliderSetting("Масштаб ников", 1.0f, 0.5f, 3.0f, 0.1f);
 
     public ESP() {
         super("EnhancedStats", Category.Render);
         toggle();
-        addSettings(remove, scaleSetting);  // Добавляем слайдер в настройки
+        addSettings(remove, scaleSetting);
     }
 
     private final HashMap<Entity, Vector4f> positions = new HashMap<>();
@@ -180,14 +180,14 @@ public class ESP extends Function {
 
                 GL11.glPushMatrix();
 
-                // Применяем масштабирование для отображения ников
+
                 float scale = scaleSetting.get();
                 float nameX = position.x + width / 2f;
                 float nameY = position.y - 7;
 
-                // Масштабируем только текст, не двигая его
+
                 GL11.glTranslatef(nameX, nameY, 0);
-                GL11.glScalef(scale, scale, 1.0f); // Применяем масштаб
+                GL11.glScalef(scale, scale, 1.0f);
                 mc.fontRenderer.func_243246_a(e.getMatrixStack(), entity.getDisplayName(), -(length / 2f), 0, -1);
                 GL11.glPopMatrix();
 

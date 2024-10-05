@@ -34,7 +34,6 @@ public class BooleanComponent extends Component {
 
     @Override
     public void render(MatrixStack stack, float mouseX, float mouseY) {
-        // TODO Auto-generated method stub
         super.render(stack, mouseX, mouseY);
         animation.update();
         Fonts.sfMedium.drawText(stack, setting.getName(), getX() + 7, getY() + 6.5f / 2f + 1, ColorUtils.rgb(160, 163, 175), 5.5f, 0.05f);
@@ -72,7 +71,7 @@ public class BooleanComponent extends Component {
 
     @Override
     public void mouseClick(float mouseX, float mouseY, int mouse) {
-        // TODO Auto-generated method stub
+
         if (MathUtil.isHovered(mouseX, mouseY, getX() + getWidth() - width - 7, getY() + getHeight() / 2f - height / 2f, width,
                 height)) {
             setting.set(!setting.get());

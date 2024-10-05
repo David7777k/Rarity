@@ -10,7 +10,7 @@ public class RenderUtils {
 
     private static final Minecraft mc = Minecraft.getInstance();
 
-    // Метод для отрисовки прямоугольника
+
     public static void drawRect(int x, int y, int width, int height, int color) {
         int alpha = (color >> 24) & 255;
         int red = (color >> 16) & 255;
@@ -26,7 +26,7 @@ public class RenderUtils {
         glEnd();
     }
 
-    // Метод для отрисовки текста
+
     public static void drawString(MatrixStack matrixStack, String text, float x, float y, int color) {
         FontRenderer fontRenderer = mc.fontRenderer;
         fontRenderer.drawString(matrixStack, text, x, y, color);

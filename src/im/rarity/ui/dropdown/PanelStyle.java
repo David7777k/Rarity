@@ -19,7 +19,7 @@ public class PanelStyle extends Panel {
 
     public PanelStyle(Category category) {
         super(category);
-        // TODO Auto-generated constructor stub
+
     }
 
     float max = 0;

@@ -26,12 +26,11 @@ import java.util.Locale;
 @FunctionRegister(name = "AutoTransfer", type = Category.Misc, description = "31")
 public class AutoTransfer extends Function {
 
-    // Настройки
+
     private final StringSetting anarchyNumberSetting = new StringSetting("Анархия", "", "Введите номер анархии", true);
     private final StringSetting itemsCountSetting = new StringSetting("Количество предметов", "", "Количество", true);
     private final StringSetting sellPriceSetting = new StringSetting("Цена", "", "Укажите цену (от 10$)", true);
 
-    // Переменные для таймеров и состояния
     private final StopWatch stopWatch = new StopWatch();
     private final StopWatch changeServerStopWatch = new StopWatch();
     private boolean allItemsToSell = false;
@@ -41,17 +40,14 @@ public class AutoTransfer extends Function {
     private boolean isReadyToSell;
 
     public AutoTransfer() {
-        // Добавление настроек
         super("EnhancedStats", Category.Render);
         addSettings(anarchyNumberSetting, itemsCountSetting, sellPriceSetting);
     }
 
     @Subscribe
     private void onPacket(EventPacket packetEvent) {
-        // Проверяем, что игрок подключен к нужному серверу
         if (!ClientUtil.isConnectedToServer("funtime")) return;
 
-        // Обработка чата
         if (packetEvent.getPacket() instanceof SChatPacket chatPacket) {
             String chatMessage = chatPacket.getChatComponent().getString().toLowerCase(Locale.ROOT);
             if (chatMessage.contains("освободите хранилище") && !playerItems.isEmpty()) allItemsToSell = true;
@@ -66,7 +62,7 @@ public class AutoTransfer extends Function {
 
     @Subscribe
     private void onUpdate(EventUpdate updateEvent) {
-        // Проверка задержки перед началом работы
+
         if (mc.player.ticksExisted < 500 && !isReadyToSell) {
             int ticksRemaining = 500 - mc.player.ticksExisted;
             int secondsRemaining = ticksRemaining / 20;
@@ -74,14 +70,10 @@ public class AutoTransfer extends Function {
             toggle();
             return;
         }
-
-        // Проверка подключенного сервера
         if (mc.ingameGUI.getTabList().header != null) {
             String serverHeader = TextFormatting.getTextWithoutFormattingCodes(mc.ingameGUI.getTabList().header.getString());
             if (serverHeader != null && serverHeader.contains(anarchyNumberSetting.get())) connectedToServer = true;
         }
-
-        // Проверка количества предметов
         int itemCountToSell;
         try {
             itemCountToSell = Integer.parseInt(itemsCountSetting.get());
@@ -90,14 +82,11 @@ public class AutoTransfer extends Function {
             toggle();
             return;
         }
-
         if (itemCountToSell > 9) {
             print("Ошибка: количество предметов не должно превышать 9.");
             toggle();
             return;
         }
-
-        // Проверка цены продажи
         int sellPrice;
         try {
             sellPrice = Integer.parseInt(sellPriceSetting.get());
@@ -113,7 +102,7 @@ public class AutoTransfer extends Function {
             return;
         }
 
-        // Продажа предметов
+
         if (!isReadyToSell) {
             for (int i = 0; i < 9; i++) {
                 ItemStack stack = mc.player.inventory.getStackInSlot(i);
@@ -127,12 +116,10 @@ public class AutoTransfer extends Function {
             }
         }
 
-        // Обработка продажи предметов
+
         if (sellCount >= itemCountToSell || allItemsToSell) {
             isReadyToSell = true;
             int anarchyNumber = Integer.parseInt(anarchyNumberSetting.get());
-
-            // Подключение к серверу анархии
             if (!connectedToServer) {
                 if (changeServerStopWatch.isReached(100)) {
                     mc.player.sendChatMessage("/an" + anarchyNumber);
@@ -141,7 +128,6 @@ public class AutoTransfer extends Function {
                 return;
             }
 
-            // Продажа предметов из сундука
             if (mc.player.openContainer instanceof ChestContainer container) {
                 IInventory lowerChestInventory = container.getLowerChestInventory();
 

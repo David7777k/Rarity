@@ -40,7 +40,6 @@ public class TargetESP extends Function {
     @Subscribe
     private void onDisplay(EventDisplay e) {
         if (this.mod.is("Client")) {
-            // Обработка для режима "Client"
             if (e.getType() != EventDisplay.Type.PRE) {
                 return;
             }
@@ -60,7 +59,6 @@ public class TargetESP extends Function {
         }
 
         if (this.mod.is("Призраки")) {
-            // Обработка для режима "Призраки"
             if (e.getType() != EventDisplay.Type.PRE) {
                 return;
             }
@@ -82,9 +80,6 @@ public class TargetESP extends Function {
                 Vector3d[] lowerPositions = new Vector3d[]{legPos.add(0.0, 0.5, 0.0)};
                 Vector3d[] lowerPositions2 = new Vector3d[]{headPos.add(0.0, 0.5, 0.0)};
                 ResourceLocation image = new ResourceLocation("rarity/images/hud/glow.png");
-
-                // Код для эффекта "Призраки"
-                // (продолжение аналогичное тому, что у вас уже есть)
             }
         }
     }
@@ -92,7 +87,6 @@ public class TargetESP extends Function {
     @Subscribe
     private void onWorldEvent(WorldEvent e) {
         if (this.mod.is("Арбуз")) {
-            // Обработка для нового мода "Арбуз"
             KillAura killAura = Rarity.getInstance().getFunctionRegistry().getKillAura();
             if (killAura.isState() && killAura.getTarget() != null) {
                 MatrixStack ms = new MatrixStack();
@@ -105,10 +99,6 @@ public class TargetESP extends Function {
                 RenderSystem.disableCull();
                 RenderSystem.disableAlphaTest();
                 RenderSystem.blendFuncSeparate(770, 1, 0, 1);
-
-                // Логика рендера эффекта "Кругляшок"
-                // Этот код можно взять из того, что вы уже предоставили.
-
                 RenderSystem.defaultBlendFunc();
                 RenderSystem.disableBlend();
                 RenderSystem.enableCull();

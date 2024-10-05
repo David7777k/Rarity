@@ -1,67 +1,16 @@
-/*******************************************************************************
-* Copyright (c) 2012 Luaj.org. All rights reserved.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-* 
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-******************************************************************************/
+
 package im.rarity.scripts.interpreter.lib;
 
 import im.rarity.scripts.interpreter.LuaTable;
 import im.rarity.scripts.interpreter.LuaValue;
 import im.rarity.scripts.interpreter.Varargs;
 
-/**
- * Subclass of LibFunction that implements the Lua standard {@code bit32} library.
- * <p>
- * Typically, this library is included as part of a call to either
- * {@link vm2.lib.jse.JsePlatform#standardGlobals()} or {@link vm2.lib.jme.JmePlatform#standardGlobals()}
- * <pre> {@code
- * Globals globals = JsePlatform.standardGlobals();
- * System.out.println( globals.get("bit32").get("bnot").call( LuaValue.valueOf(2) ) );
- * } </pre>
- * <p>
- * To instantiate and use it directly,
- * link it into your globals table via {@link LuaValue#load(LuaValue)} using code such as:
- * <pre> {@code
- * Globals globals = new Globals();
- * globals.load(new JseBaseLib());
- * globals.load(new PackageLib());
- * globals.load(new Bit32Lib());
- * System.out.println( globals.get("bit32").get("bnot").call( LuaValue.valueOf(2) ) );
- * } </pre>
- * <p>
- * This has been implemented to match as closely as possible the behavior in the corresponding library in C.
- * @see LibFunction
- * @see vm2.lib.jse.JsePlatform
- * @see vm2.lib.jme.JmePlatform
- * @see <a href="http://www.lua.org/manual/5.2/manual.html#6.7">Lua 5.2 Bitwise Operation Lib Reference</a>
- */
+
 public class Bit32Lib extends TwoArgFunction {
 
 	public Bit32Lib() {
 	}
 
-	/** Perform one-time initialization on the library by creating a table
-	 * containing the library functions, adding that table to the supplied environment,
-	 * adding the table to package.loaded, and returning table as the return value.
-	 * @param modname the module name supplied if this is loaded via 'require'.
-	 * @param env the environment to load into, which must be a Globals instance.
-	 */
 	public LuaValue call(LuaValue modname, LuaValue env) {
 		LuaTable t = new LuaTable();
 		bind(t, Bit32LibV.class, new String[] {

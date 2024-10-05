@@ -60,7 +60,7 @@ public class ModuleComponent extends Component {
         animation = animation.animate(open ? 1 : 0, 0.3);
     }
 
-    // draw components
+
     public void drawComponents(MatrixStack stack, float mouseX, float mouseY) {
         if (animation.getValue() > 0) {
             if (animation.getValue() > 0.1 && components.stream().filter(Component::isVisible).count() >= 1) {
@@ -85,7 +85,7 @@ public class ModuleComponent extends Component {
 
     @Override
     public void mouseRelease(float mouseX, float mouseY, int mouse) {
-        // TODO Auto-generated method stub
+
 
         for (Component component : components) {
             component.mouseRelease(mouseX, mouseY, mouse);
