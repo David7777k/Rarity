@@ -252,3 +252,23 @@ ERROR : Couldn't load Narrator library : Unable to load library 'SAPIWrapper_x86
 [23:09:45] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
 [23:09:45] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
 [23:09:45] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[23:43:49] [Server thread/INFO]: Saving and pausing game...
+[23:43:49] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[23:43:49] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[23:43:49] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[23:53:58] [Server thread/INFO]: flipmoney12 lost connection: Отключение
+[23:53:58] [Server thread/INFO]: flipmoney12 покинул игру
+[23:53:58] [Server thread/INFO]: Stopping singleplayer server as player logged out
+[23:53:58] [Server thread/INFO]: Stopping server
+[23:53:58] [Server thread/INFO]: Saving players
+[23:53:58] [Server thread/INFO]: Saving worlds
+[23:53:58] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[23:53:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (New World): All chunks are saved
+[23:53:58] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[23:53:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[23:53:58] [Server thread/INFO]: Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[23:53:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[23:53:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (New World): All chunks are saved
+[23:53:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[23:53:58] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[23:53:59] [main/INFO]: Stopping!
