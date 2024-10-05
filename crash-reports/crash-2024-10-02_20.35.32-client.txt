@@ -1,0 +1,64 @@
+---- Minecraft Crash Report ----
+// There are four lights!
+
+Time: 02.10.24, 20:35
+Description: Initializing game
+
+java.lang.NullPointerException: Cannot invoke "java.awt.Color.getRGB()" because the return value of "im.rarity.functions.settings.impl.ColorSetting.getColor()" is null
+	at im.rarity.functions.impl.misc.BaseFinder.<init>(BaseFinder.java:44)
+	at im.rarity.functions.api.FunctionRegistry.init(FunctionRegistry.java:102)
+	at im.rarity.Rarity.clientLoad(Rarity.java:124)
+	at im.rarity.Rarity.<init>(Rarity.java:105)
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:430)
+	at net.minecraft.client.main.Main.main(Main.java:154)
+	at Start.main(Start.java:11)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at im.rarity.functions.impl.misc.BaseFinder.<init>(BaseFinder.java:44)
+	at im.rarity.functions.api.FunctionRegistry.init(FunctionRegistry.java:102)
+	at im.rarity.Rarity.clientLoad(Rarity.java:124)
+	at im.rarity.Rarity.<init>(Rarity.java:105)
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:430)
+
+-- Initialization --
+Details:
+Stacktrace:
+	at net.minecraft.client.main.Main.main(Main.java:154)
+	at Start.main(Start.java:11)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 17.0.12, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 85795840 bytes (81 MB) / 245366784 bytes (234 MB) up to 4276092928 bytes (4078 MB)
+	CPUs: 12
+	JVM Flags: 0 total; 
+	Launched Version: mcp
+	Backend library: LWJGL version 3.2.2 build 10
+	Backend API: NVIDIA GeForce RTX 3060/PCIe/SSE2 GL version 4.6.0 NVIDIA 565.90, NVIDIA Corporation
+	GL Caps: Using framebuffer using OpenGL 3.0
+	Using VBOs: Yes
+	Is Modded: Very likely; Jar signature invalidated
+	Type: Client (map_client.txt)
+	CPU: 12x AMD Ryzen 5 5600X 6-Core Processor 
+	OptiFine Version: OptiFine_1.16.5_HD_U_G8
+	OptiFine Build: ~~NULL~~
+	Render Distance Chunks: 12
+	Mipmaps: 4
+	Anisotropic Filtering: 1
+	Antialiasing: 0
+	Multitexture: false
+	Shaders: null
+	OpenGlVersion: 4.6.0 NVIDIA 565.90
+	OpenGlRenderer: NVIDIA GeForce RTX 3060/PCIe/SSE2
+	OpenGlVendor: NVIDIA Corporation
+	CpuCount: 12

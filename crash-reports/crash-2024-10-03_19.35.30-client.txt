@@ -1,0 +1,78 @@
+---- Minecraft Crash Report ----
+// I bet Cylons wouldn't have this problem.
+
+Time: 03.10.24, 19:35
+Description: Unexpected error
+
+java.lang.NullPointerException: Cannot invoke "it.unimi.dsi.fastutil.ints.IntArrayList.getInt(int)" because "this.wrapped" is null
+	at it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap$MapIterator.nextEntry(Int2ObjectOpenHashMap.java:668)
+	at it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap$EntryIterator.next(Int2ObjectOpenHashMap.java:742)
+	at it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap$EntryIterator.next(Int2ObjectOpenHashMap.java:738)
+	at net.minecraft.client.world.ClientWorld.tickEntities(ClientWorld.java:184)
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1564)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:954)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:574)
+	at net.minecraft.client.main.Main.main(Main.java:189)
+	at Start.main(Start.java:11)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap$MapIterator.nextEntry(Int2ObjectOpenHashMap.java:668)
+	at it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap$EntryIterator.next(Int2ObjectOpenHashMap.java:742)
+	at it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap$EntryIterator.next(Int2ObjectOpenHashMap.java:738)
+	at net.minecraft.client.world.ClientWorld.tickEntities(ClientWorld.java:184)
+
+-- Affected level --
+Details:
+	All players: 7 total; [ClientPlayerEntity['qwe123qqq148'/4687180, l='ClientLevel', x=121.47, y=106.00, z=-28.09], RemoteClientPlayerEntity['Farmling_322'/3941912, l='ClientLevel', x=102.91, y=101.00, z=-24.67], RemoteClientPlayerEntity['phona01943'/4273296, l='ClientLevel', x=85.57, y=95.00, z=-21.95], RemoteClientPlayerEntity['FuTonis4'/4565730, l='ClientLevel', x=123.70, y=76.00, z=14.70], RemoteClientPlayerEntity['CIT-9a9b19c1449a'/2570, l='ClientLevel', x=82.00, y=89.00, z=-11.00], RemoteClientPlayerEntity['mishka_barny666'/4624180, l='ClientLevel', x=74.67, y=88.94, z=-0.64], RemoteClientPlayerEntity['soul'/2618, l='ClientLevel', x=102.50, y=89.00, z=19.50]]
+	Chunk stats: Client Chunk Cache: 441, 177
+	Level dimension: minecraft:lobby
+	Level spawn location: World: (0,90,0), Chunk: (at 0,5,0 in 0,0; contains blocks 0,0,0 to 15,255,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 52955 game time, 3000 day time
+	Server brand: BotFilter (git:BungeeCord-Bootstrap:1.21-R0.1-SNAPSHOT:e2252ed:unknown) <- §6Fun§cCore 1.16.5
+	Server type: Non-integrated multiplayer server
+Stacktrace:
+	at net.minecraft.client.world.ClientWorld.fillCrashReport(ClientWorld.java:530)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2294)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:596)
+	at net.minecraft.client.main.Main.main(Main.java:189)
+	at Start.main(Start.java:11)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 17.0.12, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 723537480 bytes (690 MB) / 1157627904 bytes (1104 MB) up to 4276092928 bytes (4078 MB)
+	CPUs: 12
+	JVM Flags: 0 total; 
+	Launched Version: mcp
+	Backend library: LWJGL version 3.2.2 build 10
+	Backend API: NVIDIA GeForce RTX 3060/PCIe/SSE2 GL version 4.6.0 NVIDIA 565.90, NVIDIA Corporation
+	GL Caps: Using framebuffer using OpenGL 3.0
+	Using VBOs: Yes
+	Is Modded: Very likely; Jar signature invalidated
+	Type: Client (map_client.txt)
+	Graphics mode: fast
+	Resource Packs: vanilla
+	Current Language: Русский (Россия)
+	CPU: 12x AMD Ryzen 5 5600X 6-Core Processor 
+	OptiFine Version: OptiFine_1.16.5_HD_U_G8
+	OptiFine Build: ~~NULL~~
+	Render Distance Chunks: 12
+	Mipmaps: 4
+	Anisotropic Filtering: 1
+	Antialiasing: 0
+	Multitexture: false
+	Shaders: null
+	OpenGlVersion: 4.6.0 NVIDIA 565.90
+	OpenGlRenderer: NVIDIA GeForce RTX 3060/PCIe/SSE2
+	OpenGlVendor: NVIDIA Corporation
+	CpuCount: 12
