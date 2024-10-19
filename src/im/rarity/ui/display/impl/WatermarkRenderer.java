@@ -27,7 +27,7 @@ public class WatermarkRenderer implements ElementRenderer {
         final ITextComponent name2 = GradientUtil.gradient("W");
         final ITextComponent name3 = GradientUtil.gradient("A");
         final ITextComponent name4 = GradientUtil.gradient("S");
-        final ITextComponent name10 = GradientUtil.gradient("" + mc.player.getName().getString());
+        final ITextComponent name10 = GradientUtil.gradient("Discord");
         final ITextComponent name20 = GradientUtil.gradient("W");
         final ITextComponent name30 = GradientUtil.gradient("A");
         final ITextComponent name40 = GradientUtil.gradient("S");
@@ -44,8 +44,7 @@ public class WatermarkRenderer implements ElementRenderer {
 
         int windowWidth = ClientUtil.calc(mc.getMainWindow().getScaledWidth());
 
-
-        String username = "" + mc.player.getName().getString();
+        String username = Rarity.getInstance().getDiscordUsername();
         String SERVER = mc.getCurrentServerData() != null ? mc.getCurrentServerData().serverIP : "Singleplayer";
         String FPS = mc.debugFPS + "fps";
 
@@ -76,23 +75,15 @@ public class WatermarkRenderer implements ElementRenderer {
         float finalPosXIcon = centerX - iconSizeX / 2;
         float finalPosYIcon = centerY - iconSizeY / 2;
 
-
-
-
         drawStyledRect(posX, posY + 5, rectWidthIco, rectHeightIco, 3);
 
-
-
-
         Fonts.icons.drawCenteredText(ms, name, finalPosXIcon + 5f, finalPosYIcon + 1f,
-                 fontSize + 2);
-
+                fontSize + 2);
 
         drawStyledRect(posX + rectWidthIco + 2.5f, posY + 5, rectWidth - rectWidthIco - 5, rectHeightIco, 3);
 
         float textPosX = posX + rectWidthIco + 7.5f;
         float textPosY = posY + 9.5f;
-
 
         Fonts.icons.drawCenteredText(ms, name2, textPosX + 2, textPosY + 0.5f, 6.5F);
 

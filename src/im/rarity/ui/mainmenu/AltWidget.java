@@ -1,178 +1,274 @@
 package im.rarity.ui.mainmenu;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import im.rarity.utils.client.IMinecraft;
-import im.rarity.utils.math.MathUtil;
-import im.rarity.utils.render.ColorUtils;
-import im.rarity.utils.render.DisplayUtils;
-import im.rarity.utils.render.Scissor;
-import im.rarity.utils.render.font.Fonts;
-import net.minecraft.util.Session;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector4f;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import org.apache.commons.lang3.RandomStringUtils;
 
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+public class AltWidget extends Screen {
 
-public class AltWidget implements IMinecraft {
-    public final List<Alt> alts = new ArrayList<>();
+    final List<Account> accounts = new ArrayList<>();
+    private float scroll;
+    private float scrollSpeed = 0.0f;
+    private String altName = "";
+    private WidgetState currentState = WidgetState.VIEWING;
 
-    private float x;
-    private final float y;
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("rarity/images/backmenu.png");
+    private static final ResourceLocation STEVE_HEAD = new ResourceLocation("minecraft", "textures/entity/steve.png");
+    private static final ResourceLocation ALEX_HEAD = new ResourceLocation("minecraft", "textures/entity/alex.png");
+
+    private final Minecraft mc;
 
     public AltWidget() {
-
-        y = 10;
-
+        super(new StringTextComponent("Добавьте новый аккаунт!"));
+        this.mc = Minecraft.getInstance();
+        loadAccounts(); // Load accounts from file during initialization
     }
 
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        renderBackgroundTexture(matrixStack); // Render background
+        renderInputField(matrixStack, mouseX, mouseY); // Render account input field
+        renderAccountList(matrixStack, mouseX, mouseY); // Render account list
+        renderButtons(matrixStack, mouseX, mouseY); // Render "Random Nick" and "Clear" buttons
+    }
 
-    public boolean open;
+    private void renderBackgroundTexture(MatrixStack matrixStack) {
+        mc.getTextureManager().bindTexture(BACKGROUND);
+        blit(matrixStack, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
+    }
 
-    private String altName = "";
-    private boolean typing;
-    private float scrollPre;
-    private float scroll;
+    private void renderInputField(MatrixStack matrixStack, int mouseX, int mouseY) {
+        float x = this.width / 2f - 130f;
+        float y = this.height / 2f - 150f;
+        drawGradientRoundedRect(matrixStack, x, y, 260f, 30f, 5f, new Color(60, 60, 60, 180).getRGB(), new Color(80, 80, 80, 180).getRGB());
+        drawBorder(matrixStack, x, y, 260f, 30f, 1f, Color.LIGHT_GRAY.getRGB());
+        String inputText = currentState == WidgetState.TYPING || !altName.isEmpty() ? altName : "Введите имя аккаунта...";
+        drawStringWithShadow(matrixStack, inputText, x + 10f, y + 10f, new Color(200, 200, 200).getRGB());
+    }
+
+    private void renderAccountList(MatrixStack matrixStack, int mouseX, int mouseY) {
+        float x = this.width / 2f - 130f;
+        float y = this.height / 2f - 100f;
+        drawStringWithShadow(matrixStack, "Аккаунты:", x + 10, y - 20f, Color.WHITE.getRGB());
+        drawStringWithShadow(matrixStack, "Выбери аккаунт из списка!", x + 10, y - 5f, new Color(180, 180, 180).getRGB());
+        drawGradientRoundedRect(matrixStack, x, y, 260f, 200f, 5f, new Color(60, 60, 60, 180).getRGB(), new Color(80, 80, 80, 180).getRGB());
+        drawBorder(matrixStack, x, y, 260f, 200f, 1f, Color.LIGHT_GRAY.getRGB());
+
+        if (accounts.isEmpty()) {
+            drawCenteredString(matrixStack, this.font, "Нет доступных аккаунтов", (int) (x + 130f), (int) (y + 100f), Color.WHITE.getRGB());
+        }
+
+        float iter = scroll;
+        for (Account account : accounts) {
+            float scrollY = y + iter * 40f;
+            int accountColor = isHovered(mouseX, mouseY, x + 5f, scrollY, 250f, 40f) ? new Color(111, 131, 151).getRGB() : new Color(101, 101, 101).getRGB();
+            drawGradientRoundedRect(matrixStack, x + 5f, scrollY, 250f, 40f, 5f, accountColor, new Color(121, 121, 121).getRGB());
+            drawBorder(matrixStack, x + 5f, scrollY, 250f, 40f, 1f, new Color(140, 140, 140, 255).getRGB());
+
+            ResourceLocation skin = account.isAlex() ? ALEX_HEAD : STEVE_HEAD;
+            mc.getTextureManager().bindTexture(skin);
+            blit(matrixStack, (int) (x + 10f), (int) (scrollY + 6f), 8, 8, 8, 8, 64, 64);
+            drawStringWithShadow(matrixStack, account.getAccountName(), x + 30f, scrollY + 12f, Color.WHITE.getRGB());
+            iter++;
+        }
+        drawStringWithShadow(matrixStack, "Ваш ник - " + (altName.isEmpty() ? "Не задан" : altName), x, y + 210f, new Color(255, 255, 255).getRGB());
+    }
+
+    private void renderButtons(MatrixStack matrixStack, int mouseX, int mouseY) {
+        float x = this.width / 2f - 130f;
+        float y = this.height / 2f + 130f;
+        float buttonWidth = 125f;
+        float buttonHeight = 25f;
+        float spacing = 10f;
+
+        // Render "Random Nick" button
+        renderButton(matrixStack, x, y, buttonWidth, buttonHeight, "Рандом ник", mouseX, mouseY, () -> {
+            altName = RandomStringUtils.randomAlphabetic(8);
+            currentState = WidgetState.TYPING;
+            saveAccount(); // Automatically save the new random account
+            updateScreen();
+        });
+
+        // Render "Clear" button
+        renderButton(matrixStack, x + buttonWidth + spacing, y, buttonWidth, buttonHeight, "Очистить", mouseX, mouseY, () -> {
+            altName = "";
+            currentState = WidgetState.VIEWING;
+            updateScreen();
+        });
+    }
+
+    private void renderButton(MatrixStack matrixStack, float x, float y, float width, float height, String label, int mouseX, int mouseY, Runnable onClick) {
+        boolean hovered = isHovered(mouseX, mouseY, x, y, width, height);
+        int buttonColor = hovered ? new Color(111, 131, 151).getRGB() : new Color(101, 101, 101).getRGB();
+        drawGradientRoundedRect(matrixStack, x, y, width, height, 5f, buttonColor, new Color(121, 121, 121).getRGB());
+        drawBorder(matrixStack, x, y, width, height, 1f, Color.LIGHT_GRAY.getRGB());
+        drawStringWithShadow(matrixStack, label, x + 10f, y + 7f, Color.WHITE.getRGB());
+
+        if (hovered && isMouseClicked(mouseX, mouseY)) {
+            onClick.run();
+        }
+    }
+
+    private boolean isHovered(double mouseX, double mouseY, float x, float y, float width, float height) {
+        return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+    }
+
+    private boolean isMouseClicked(int mouseX, int mouseY) {
+        // Placeholder for mouse click detection
+        return false;
+    }
+
+    private void drawStringWithShadow(MatrixStack matrixStack, String text, float x, float y, int color) {
+        this.font.drawStringWithShadow(matrixStack, text, x, y, color);
+    }
+
+    private void drawGradientRoundedRect(MatrixStack matrixStack, float x, float y, float width, float height, float radius, int colorStart, int colorEnd) {
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        buffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        float alphaStart = (colorStart >> 24 & 255) / 255.0F;
+        float redStart = (colorStart >> 16 & 255) / 255.0F;
+        float greenStart = (colorStart >> 8 & 255) / 255.0F;
+        float blueStart = (colorStart & 255) / 255.0F;
+        float alphaEnd = (colorEnd >> 24 & 255) / 255.0F;
+        float redEnd = (colorEnd >> 16 & 255) / 255.0F;
+        float greenEnd = (colorEnd >> 8 & 255) / 255.0F;
+        float blueEnd = (colorEnd & 255) / 255.0F;
+        buffer.pos(x, y + height, 0.0D).color(redStart, greenStart, blueStart, alphaStart).endVertex();
+        buffer.pos(x + width, y + height, 0.0D).color(redEnd, greenEnd, blueEnd, alphaEnd).endVertex();
+        buffer.pos(x + width, y, 0.0D).color(redEnd, greenEnd, blueEnd, alphaEnd).endVertex();
+        buffer.pos(x, y, 0.0D).color(redStart, greenStart, blueStart, alphaStart).endVertex();
+        Tessellator.getInstance().draw();
+        RenderSystem.disableBlend();
+        RenderSystem.enableTexture();
+    }
+
+    private void drawBorder(MatrixStack matrixStack, float x, float y, float width, float height, float thickness, int color) {
+        fill(matrixStack, (int) x, (int) y, (int) (x + width), (int) (y + thickness), color);
+        fill(matrixStack, (int) x, (int) (y + height - thickness), (int) (x + width), (int) (y + height), color);
+        fill(matrixStack, (int) x, (int) y, (int) (x + thickness), (int) (y + height), color);
+        fill(matrixStack, (int) (x + width - thickness), (int) y, (int) (x + width), (int) (y + height), color);
+    }
 
     public void updateScroll(int mouseX, int mouseY, float delta) {
+        // Implement scroll logic with limits
+        scroll += delta * scrollSpeed;
+        scroll = Math.max(0, Math.min(scroll, accounts.size() - 5));
+    }
 
-        if (MathUtil.isHovered(mouseX, mouseY, this.x, this.y, 145, 100) && open) {
-            scrollPre += delta * 10;
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY) {
+    }
+
+    public void onChar(char codePoint) {
+        if (currentState == WidgetState.TYPING) {
+            altName += codePoint;
+            updateScreen();
         }
     }
 
-    public void render(MatrixStack stack, int x, int y) {
-        scroll = MathUtil.fast(scroll, scrollPre, 10);
-
-        this.x = mc.getMainWindow().getScaledWidth() - 110 - 45;
-        float width = 145;
-
-        float height = Math.min(20 + (open ? 10 + (alts.size() + 1) * (17) : 0), 100);
-
-        DisplayUtils.drawShadow(this.x, this.y, width, height, 10, ColorUtils.rgba(0, 0, 10, 128));
-
-        DisplayUtils.drawRoundedRect(this.x, this.y, width, height, new Vector4f(4, 4, 4, 4), ColorUtils.rgba(0, 0, 10, 128));
-        Scissor.push();
-        Scissor.setFromComponentCoordinates(this.x, this.y, width - 16, height);
-        Fonts.montserrat.drawText(stack, mc.session.getUsername(), this.x + 6, this.y + 6, -1, 7);
-        Scissor.unset();
-        Scissor.pop();
-        Fonts.icons.drawText(stack, open ? "C" : "B", this.x + width - 6 - Fonts.icons.getWidth(open ? "C" : "B", 7), this.y + 6.5f, -1, 7);
-        if (open) {
-            DisplayUtils.drawRectHorizontalW(this.x, this.y + 20, width, 5f, ColorUtils.rgba(64, 64, 64, 0), ColorUtils.rgba(64, 64, 64, 64));
-            DisplayUtils.drawRectW(this.x, this.y + 20, width, 0.5f, ColorUtils.rgba(64, 64, 64, 255));
-            Scissor.push();
-            Scissor.setFromComponentCoordinates(this.x, this.y + 20, width, 100f - 20);
-            float i = 0;
-            for (Alt alt : alts) {
-                DisplayUtils.drawRoundedRect(this.x + 5, this.y + 26 + i * 17 + scroll, width - 10, 15, 3, mc.session.getUsername().equals(alt.name) ? ColorUtils.rgba(30, 30, 36, 128) : ColorUtils.rgba(30, 30, 36, 64));
-                Fonts.montserrat.drawText(stack, alt.name, this.x + 10, this.y + 26 + i * 17 + 4 + scroll, -1, 6);
-                i++;
-            }
-            if (!alts.isEmpty() && 20 + (open ? 10 + (alts.size() + 1) * (17) : 0) > 100)
-                scrollPre = MathHelper.clamp(scrollPre, -i * 17 + 50, 0);
-            else {
-                scrollPre = 0;
-            }
-            String textToDraw = altName;
-
-            if (!typing && altName.isEmpty()) {
-                textToDraw = "nickname";
-            }
-
-            DisplayUtils.drawRoundedRect(this.x + 5, this.y + 26 + i * 17 + scroll, width - 10,
-                    15, 3, ColorUtils.rgba(30, 30, 36, 64));
-            Fonts.montserrat.drawText(stack, textToDraw + (typing ? (System.currentTimeMillis() % 1000 > 500 ? "_" : "") : ""),
-                    this.x + 10, this.y + 26 + i * 17 + 4 + scroll, ColorUtils.rgba(255, 255, 255, 64), 6);
-            DisplayUtils.drawRoundedRect(this.x + 5 + 2, this.y + 26 + i * 17 + 2 + scroll,
-                    Fonts.montserrat.getWidth(textToDraw + (typing ? (System.currentTimeMillis() % 1000 > 500 ? "_" : "") : ""),
-                            6) + 7, 15 - 4, 2, ColorUtils.rgba(30, 30, 36, 64));
-            Fonts.montserrat.drawText(stack, "+", this.x + width - 18,
-                    this.y + 26 + i * 17 + 2 + scroll, -1, 10);
-            Scissor.unset();
-            Scissor.pop();
+    public void onKey(int keyCode) {
+        if (keyCode == 259 && !altName.isEmpty()) { // Backspace key code
+            altName = altName.substring(0, altName.length() - 1);
+            updateScreen();
         }
     }
 
-    public void onChar(char typed) {
-        if (typing) {
-            if (Fonts.montserrat.getWidth(altName, 6f) < 145 - 50) {
-                altName += typed;
-            }
+    public void click(int x, int y, int button) {
+        float buttonWidth = 125f;
+        float buttonHeight = 25f;
+        float xBase = this.width / 2f - 130f;
+        float yBase = this.height / 2f + 130f;
+        float spacing = 10f;
+
+        if (isHovered(x, y, xBase, yBase, buttonWidth, buttonHeight)) {
+            altName = RandomStringUtils.randomAlphabetic(8); // Рандом ник
+            currentState = WidgetState.TYPING;
+            saveAccount(); // Automatically save the new random account
+            updateScreen();
+        } else if (isHovered(x, y, xBase + buttonWidth + spacing, yBase, buttonWidth, buttonHeight)) {
+            altName = ""; // Очистить ник
+            currentState = WidgetState.VIEWING;
+            updateScreen();
         }
     }
 
-    public void onKey(int key) {
-        boolean ctrlDown = GLFW.glfwGetKey(mc.getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL) == GLFW.GLFW_PRESS ||
-                GLFW.glfwGetKey(mc.getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_CONTROL) == GLFW.GLFW_PRESS;
-        if (typing) {
-            if (ctrlDown && key == GLFW.GLFW_KEY_V) {
-                try {
-                    altName += GLFW.glfwGetClipboardString(mc.getMainWindow().getHandle());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (key == GLFW.GLFW_KEY_BACKSPACE) {
-                if (!altName.isEmpty()) {
-                    altName = altName.substring(0, altName.length() - 1);
-                }
-            }
-            if (key == GLFW.GLFW_KEY_ENTER) {
-                if (altName.length() >= 3) {
-                    alts.add(new Alt(altName));
-                    AltConfig.updateFile();
-                }
-                typing = false;
-            }
+    private void updateScreen() {
+        this.minecraft.displayGuiScreen(this); // Перерисовка экрана, чтобы обновить изменения
+    }
+
+    private void saveAccount() {
+        if (!altName.isEmpty()) {
+            accounts.add(new Account(altName));
+            saveAccounts(); // Save accounts to file after adding a new account
+            altName = "";
+            currentState = WidgetState.VIEWING;
+            updateScreen();
         }
     }
 
-    public void click(int mouseX, int mouseY, int button) {
-        float width = 145;
-
-        if (MathUtil.isHovered(mouseX, mouseY, this.x, this.y, width, 20)) {
-            open = !open;
-
-            if (!open) {
-                typing = false;
-            }
-        }
-        if (!MathUtil.isHovered(mouseX, mouseY, this.x, this.y, width, 50)) {
-            typing = false;
-        }
-        List<Alt> toRemove = new ArrayList<>();
-        if (open) {
-            float i = 0;
-            for (Alt alt : alts) {
-
-                if (MathUtil.isHovered(mouseX, mouseY, this.x + 5, this.y + 26 + i * 17 + scroll, width - 10, 15)) {
-                    if (button == 0) {
-                        AltConfig.updateFile();
-                        mc.session = new Session(alt.name, UUID.randomUUID().toString(), "", "mojang");
-                    } else {
-                        toRemove.add(alt);
-                        AltConfig.updateFile();
-                    }
-                }
-                i++;
-            }
-            alts.removeAll(toRemove);
-        }
-
-        if (MathUtil.isHovered(mouseX, mouseY, this.x + 82, this.y + 26 + alts.size() * 17 + 2 + scroll, 10, 10)) {
-            if (altName.length() >= 3) {
-                alts.add(new Alt(altName));
-                AltConfig.updateFile();
-            }
-            typing = false;
-        }
-        if (MathUtil.isHovered(mouseX, mouseY, this.x + 5, this.y + 26 + alts.size() * 17 + scroll, width - 10, 15)) {
-            typing = !typing;
+    private void saveAccounts() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("accounts.dat"))) {
+            out.writeObject(accounts);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private void loadAccounts() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("accounts.dat"))) {
+            accounts.addAll((List<Account>) in.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private enum WidgetState {
+        TYPING,
+        VIEWING
+    }
+
+    public static class Account implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private final String accountName;
+        private final UUID id;
+        private final long creationTime;
+
+        public Account(String accountName) {
+            this.accountName = accountName;
+            this.id = UUID.randomUUID();
+            this.creationTime = System.currentTimeMillis();
+        }
+
+        public String getAccountName() {
+            return accountName;
+        }
+
+        public boolean isAlex() {
+            return accountName.hashCode() % 2 == 0;
+        }
+
+        public long getCreationTime() {
+            return creationTime;
+        }
+
+        public UUID getId() {
+            return id;
+        }
+    }
 }

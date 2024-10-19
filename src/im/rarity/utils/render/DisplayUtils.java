@@ -836,4 +836,13 @@ public class DisplayUtils implements IMinecraft {
     public static void drawImage(ResourceLocation resourceLocation, float v, float v1, float v2, float v3) {
 
     }
+
+    public static void drawGradientRoundedRect(float x, float y, float width, int height, int i, int gradientStartColor, int gradientEndColor) {
+    }
+
+    public static void drawRoundedRectOutline(float x, float y, float width, float height, int i, int borderColor) {
+    }
+
+    public static void drawGradientRoundedRectOutline(float x, float y, float widgetWidth, float height, int i, int outlineGradientStartColor, int outlineGradientEndColor, int i1) {
+    }
 }

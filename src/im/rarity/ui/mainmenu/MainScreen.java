@@ -23,29 +23,28 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.WorldSelectionScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-
 public class MainScreen extends Screen implements IMinecraft {
     public MainScreen() {
-        super(ITextComponent.getTextComponentOrEmpty(""));
-
+        super(new StringTextComponent("Main Screen"));
     }
 
     private final ResourceLocation backmenu = new ResourceLocation("rarity/images/backmenu.png");
-
     private final List<Button> buttons = new ArrayList<>();
+    private static final CopyOnWriteArrayList<Particle> particles = new CopyOnWriteArrayList<>();
+    private final StopWatch stopWatch = new StopWatch();
+    static boolean start = false;
 
     @Override
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
         float widthButton = 350 / 2f;
-
 
         for (Particle particle : particles) {
             particle.y = ThreadLocalRandom.current().nextInt(-5, height);
@@ -53,6 +52,11 @@ public class MainScreen extends Screen implements IMinecraft {
         float x = ClientUtil.calc(width) / 2f - widthButton / 2f;
         float y = Math.round(ClientUtil.calc(height) / 2f + 45);
         buttons.clear();
+
+        // Добавление кнопки Alt Manager
+        buttons.add(new Button(x, y - 30, widthButton, 40 / 1f, "Alt Manager", () -> {
+            mc.displayGuiScreen(new AltWidget());
+        }));
 
         buttons.add(new Button(x, y, widthButton, 68 / 2f, "singleplayer", () -> {
             mc.displayGuiScreen(new WorldSelectionScreen(this));
@@ -68,11 +72,6 @@ public class MainScreen extends Screen implements IMinecraft {
         y += 68 / 2f + 5;
         buttons.add(new Button(x, y, widthButton, 68 / 2f, "exit", mc::shutdownMinecraftApplet));
     }
-
-    private static final CopyOnWriteArrayList<Particle> particles = new CopyOnWriteArrayList<>();
-
-    private final StopWatch stopWatch = new StopWatch();
-    static boolean start = false;
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
@@ -91,17 +90,6 @@ public class MainScreen extends Screen implements IMinecraft {
         int windowWidth = ClientUtil.calc(mainWindow.getScaledWidth());
         int windowHeight = ClientUtil.calc(mainWindow.getScaledHeight());
 
-        int logoWidth = 1920 / 2;
-        int logoHeight = 1080 / 2;
-
-
-        int xLogo = (windowWidth - logoWidth) / 2;
-        int yLogo = (windowHeight - logoHeight) / 2 + 50;
-        boolean small = mainWindow.getWidth() < 900 && mainWindow.getHeight() < 900;
-        if (small) {
-            yLogo += 50;
-        }
-        // Рисование логотипа по центру
         DisplayUtils.drawImage(backmenu, 0, 0, width, height, -1);
         mc.gameRenderer.setupOverlayRendering(2);
 
@@ -110,7 +98,6 @@ public class MainScreen extends Screen implements IMinecraft {
 
         Rarity.getInstance().getAltWidget().render(matrixStack, mouseX, mouseY);
         mc.gameRenderer.setupOverlayRendering();
-
     }
 
     @Override
@@ -122,7 +109,7 @@ public class MainScreen extends Screen implements IMinecraft {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         Rarity.getInstance().getAltWidget().onKey(keyCode);
-        return false;
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -134,14 +121,12 @@ public class MainScreen extends Screen implements IMinecraft {
     }
 
     private void drawButtons(MatrixStack stack, int mX, int mY, float pt) {
-
         buttons.forEach(b -> b.render(stack, mX, mY, pt));
     }
 
     public static final ResourceLocation button = new ResourceLocation("rarity/images/button.png");
 
     private class Particle {
-
         private final float x;
         private float y;
         private float size;
@@ -157,7 +142,6 @@ public class MainScreen extends Screen implements IMinecraft {
         }
 
         public void render(MatrixStack stack) {
-            //update();
             size += 0.1f;
             GlStateManager.pushMatrix();
             GlStateManager.translated((x + Math.sin((System.nanoTime() / 1000000000f)) * 5), y, 0);
@@ -171,7 +155,6 @@ public class MainScreen extends Screen implements IMinecraft {
                 particles.remove(this);
             }
         }
-
     }
 
     @AllArgsConstructor
@@ -194,8 +177,6 @@ public class MainScreen extends Screen implements IMinecraft {
                 color = ColorUtils.rgb(255, 255, 255);
             }
             Fonts.montserrat.drawCenteredText(stack, text, x + width / 2f, y + height / 2f - 5.5f + 2, color, 10f);
-
-
         }
 
         public void click(int mouseX, int mouseY, int button) {
@@ -203,7 +184,5 @@ public class MainScreen extends Screen implements IMinecraft {
                 action.run();
             }
         }
-
     }
-
 }

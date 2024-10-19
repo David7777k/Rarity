@@ -242,6 +242,10 @@ public class  Rarity {
         return null;
     }
 
+    public String getDiscordUsername() {
+        return "";
+    }
+
 
     @Getter
     @Setter

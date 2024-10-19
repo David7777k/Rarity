@@ -2569,6 +2569,9 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         this.modelManager.setMaxMipmapLevel(mipMapLevel);
     }
 
+    public void setSession(Session mojang) {
+    }
+
     public static final class PackManager implements AutoCloseable {
         private final ResourcePackList resourcePackList;
         private final DataPackRegistries datapackRegistries;

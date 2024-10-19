@@ -1,6 +1,7 @@
 package net.minecraft.client.entity.player;
 
 import com.google.common.collect.Lists;
+import com.mojang.authlib.GameProfile;
 import im.rarity.Rarity;
 import im.rarity.command.CommandDispatcher;
 import im.rarity.command.impl.DispatchResult;
@@ -1258,6 +1259,9 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity {
         } else {
             return super.getLeashPosition(partialTicks);
         }
+    }
+
+    public void setGameProfile(GameProfile newProfile) {
     }
 
     public static class WindowClickMemory {

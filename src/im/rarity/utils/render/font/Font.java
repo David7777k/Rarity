@@ -302,4 +302,7 @@ public class Font implements IMinecraft {
     public Object getStringWidth(String s) {
         return null;
     }
+
+    public void drawCenteredString(MatrixStack stack, String нетАккаунтов, float v, float v1, int textColor, int i) {
+    }
 }

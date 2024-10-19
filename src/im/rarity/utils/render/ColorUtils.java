@@ -55,7 +55,7 @@ public class ColorUtils {
 
 
     public static float[] rgba(final int color) {
-        return new float[] {
+        return new float[]{
                 (color >> 16 & 0xFF) / 255f,
                 (color >> 8 & 0xFF) / 255f,
                 (color & 0xFF) / 255f,
@@ -89,7 +89,12 @@ public class ColorUtils {
     }
 
 
-    public static int lerpColor(int rgb, int rgb1, float hpPercent) {
-        return rgb;
+    public static int hsvToRgb(float hue, float saturation, float value) {
+        int rgb = Color.HSBtoRGB(hue, saturation, value);
+        return (255 << 24) | (rgb & 0x00ffffff);
+    }
+
+    public static int lerpColor(int startColor, int endColor, float selectionAnimationProgress) {
+        return interpolate(startColor, endColor, selectionAnimationProgress);
     }
 }

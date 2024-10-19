@@ -2,9 +2,6 @@ package net.minecraft.client.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import java.util.Objects;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.audio.SoundHandler;
@@ -20,6 +17,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.Objects;
 
 public abstract class Widget extends AbstractGui implements IRenderable, IGuiEventListener {
     public static final ResourceLocation WIDGETS_LOCATION = new ResourceLocation("textures/gui/widgets.png");
@@ -232,7 +231,11 @@ public abstract class Widget extends AbstractGui implements IRenderable, IGuiEve
         return this.focused;
     }
 
-    protected void setFocused(boolean focused) {
+    public void setFocused(boolean focused) {
         this.focused = focused;
+    }
+
+    public int getHeight() {
+        return 0;
     }
 }

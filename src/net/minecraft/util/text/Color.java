@@ -1,11 +1,12 @@
 package net.minecraft.util.text;
 
 import com.google.common.collect.ImmutableMap;
+
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 public final class Color
 {
@@ -31,6 +32,10 @@ public final class Color
     {
         this.color = color;
         this.name = null;
+    }
+
+    public static boolean fromRgb(int i) {
+        return false;
     }
 
     public int getColor()
